@@ -1,0 +1,16 @@
+.burger__link {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  padding: 0;
+  margin: 0;
+  font-size: 18px;
+  margin-top: 18px;
+  transition: 0.3s;
+  text-decoration: none;
+}
+
+.burger__link:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}

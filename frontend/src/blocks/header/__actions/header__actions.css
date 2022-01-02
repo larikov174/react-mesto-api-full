@@ -1,0 +1,11 @@
+.header__actions {
+  display: flex;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.22;
+  color: #ffffff;
+  align-items: baseline;
+  align-self: center;
+  margin: 0;
+}

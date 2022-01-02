@@ -1,0 +1,18 @@
+.card__items {
+  width: 246px;
+  display: flex;
+  padding-top: 20px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 700px) {
+  .card__items {
+    width: 304px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .card__items {
+    width: 246px;
+  }
+}

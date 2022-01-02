@@ -1,0 +1,9 @@
+.popup__toolTip-image {
+  width: 120px;
+  height: 120px;
+  background-image: url(../../../images/pass-logo.svg);
+  background-position: center;
+  background-size: cover;
+  margin: 0 auto;
+  margin-top: 60px;
+}

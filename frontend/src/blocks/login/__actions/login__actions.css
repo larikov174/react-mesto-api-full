@@ -1,0 +1,17 @@
+.login__actions {
+  display: flex;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.22;
+  color: #ffffff;
+  align-items: baseline;
+  align-self: center;
+  margin-top: 15px;
+}
+
+@media screen and (max-width: 485px) {
+  .login__actions {
+    margin-top: 20px;
+  }
+}

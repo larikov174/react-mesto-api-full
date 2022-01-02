@@ -1,0 +1,26 @@
+.card__overlay {
+  display: block;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #2a2c2f;
+  opacity: 20%;
+  content: "";
+  height: 282px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 700px) {
+  .card__overlay {
+    height: 340px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .card__overlay {
+    height: 282px;
+  }
+}

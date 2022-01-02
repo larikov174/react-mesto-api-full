@@ -1,0 +1,30 @@
+.login__input {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 10px;
+  border: none;
+  border-bottom: 1px solid #cccccc;
+  outline: none;
+  font-family: 'Inter', Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.22;
+  color: #cccccc;
+  background-color: transparent;
+}
+
+.login__input:first-of-type{
+  margin-top:50px;
+}
+
+.login__input:not(:first-of-type){
+  margin-top:30px;
+}
+
+@media screen and (max-width: 485px){
+  .login__input:first-of-type {
+    margin-top: 40px;
+  }
+}

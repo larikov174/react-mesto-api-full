@@ -1,0 +1,5 @@
+@media screen and (max-width: 485px) {
+  .header__link_idle-on-mobile {
+    display: none;
+  }
+}
