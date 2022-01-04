@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -24,6 +25,7 @@ mongoose
   .catch((error) => console.log(error));
 
 const app = express();
+app.use(cors());
 app.use(helmet());
 app.use(cookieParser());
 app.use(bodyParser.json());
