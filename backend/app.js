@@ -9,6 +9,7 @@ const CustomError = require('./utils/CustomError');
 const auth = require('./middlewares/auth');
 const cards = require('./routes/cards');
 const users = require('./routes/users');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 const db = 'mongodb://localhost:27017/mestodb';
@@ -28,6 +29,7 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(requestLogger);
 
 app.post(
   '/signin',
@@ -58,6 +60,7 @@ app.use(auth);
 app.use('/cards', cards);
 app.use('/users', users);
 
+app.use(errorLogger);
 app.use(errors());
 
 app.use(() => {
