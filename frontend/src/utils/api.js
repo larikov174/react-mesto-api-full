@@ -102,7 +102,7 @@ class Api {
 
 const api = new Api({
   token: 'c4b6220d-e8d9-4ddd-adea-4fda80f87475',
-  link: 'https://mesto.nomoreparties.co/v1/cohort-28/',
+  link: 'https://api.larikov.nomoredomains.rocks/',
 });
 
 export default api;

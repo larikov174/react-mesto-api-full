@@ -1,5 +1,5 @@
 function useAuth() {
-  const baseUrl = 'https://auth.nomoreparties.co/';
+  const baseUrl = 'https://api.larikov.nomoredomains.rocks/';
   const handleResponse = (res) => {
     const answer = res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
     return answer;
