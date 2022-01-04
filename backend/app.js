@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
@@ -6,15 +7,13 @@ const helmet = require('helmet');
 const { celebrate, Joi, errors } = require('celebrate');
 const { createUser, login } = require('./controllers/users');
 const CustomError = require('./utils/CustomError');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
 const cards = require('./routes/cards');
 const users = require('./routes/users');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 const db = 'mongodb://localhost:27017/mestodb';
-// mongodb+srv://larikov174:2694432@cluster0.mwtfk.mongodb.net/mestodb
-// mongodb://localhost:27017/mestodb
 
 mongoose
   .connect(db, {
