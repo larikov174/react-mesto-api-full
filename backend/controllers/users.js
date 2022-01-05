@@ -64,6 +64,16 @@ module.exports.login = (req, res, next) => {
     .catch(next);
 };
 
+module.exports.logout = (req, res) => {
+  const token = req.cookies.jwt;
+  res.clearCookie('jwt', token, {
+    maxAge: 604800,
+    httpOnly: true,
+    sameSite: true,
+  });
+  return res.status(200).send('сессия закрыта');
+};
+
 module.exports.updateUserData = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(

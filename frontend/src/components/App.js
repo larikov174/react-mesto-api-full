@@ -29,7 +29,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const errorShow = (err) => console.error(err);
-  const { checkToken, signIn, signUp } = useAuth();
+  const { checkToken, signIn, signUp, signOut } = useAuth();
   const [authed, setAuthed] = useState(false);
   const jwt = localStorage.getItem('token');
   const navigate = useNavigate();
@@ -148,12 +148,10 @@ function App() {
 
   const handleSignIn = async ({ password, email }) => {
     await signIn({ password, email })
-      .then((json) => {
-        // eslint-disable-next-line
-        console.log(json);
+      .then(() => {
         setAuthed(true);
-        localStorage.setItem('email', email);
-        localStorage.setItem('token', json.token);
+        // localStorage.setItem('email', email);
+        // localStorage.setItem('token', json.token);
         navigate('/main');
       })
       .catch(() => {
@@ -178,10 +176,9 @@ function App() {
   };
 
   const handleSignOut = () => {
-      localStorage.removeItem('token');
-      localStorage.removeItem('email');
-      localStorage.removeItem('_id');
+      signOut();
       setAuthed(false);
+      navigate('/sign-in');
   }
 
   return (

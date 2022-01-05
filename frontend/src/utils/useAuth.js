@@ -2,9 +2,7 @@ function useAuth() {
   // const baseUrl = 'https://api.larikov.nomoredomains.rocks/';
   const baseUrl = 'http://localhost:3001/';
   const handleResponse = (res) => {
-    const answer = res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
-    // eslint-disable-next-line
-    console.log(answer);
+    const answer = res.ok ? res.text() : Promise.reject(`Ошибка: ${res.status}`);
     return answer;
   };
 
@@ -33,6 +31,16 @@ function useAuth() {
           password,
           email,
         }),
+      }).then(handleResponse);
+    },
+
+    signOut() {
+      return fetch(`${baseUrl}signout`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'text/plain',
+        },
       }).then(handleResponse);
     },
 
