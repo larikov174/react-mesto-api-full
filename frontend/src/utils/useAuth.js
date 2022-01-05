@@ -1,7 +1,10 @@
 function useAuth() {
-  const baseUrl = 'https://api.larikov.nomoredomains.rocks/';
+  // const baseUrl = 'https://api.larikov.nomoredomains.rocks/';
+  const baseUrl = 'http://localhost:3001/';
   const handleResponse = (res) => {
     const answer = res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
+    // eslint-disable-next-line
+    console.log(answer);
     return answer;
   };
 
@@ -22,6 +25,7 @@ function useAuth() {
     signIn({ password, email }) {
       return fetch(`${baseUrl}signin`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },

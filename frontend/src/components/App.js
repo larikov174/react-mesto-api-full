@@ -57,7 +57,7 @@ function App() {
     if (jwt !== null) {
       onLoadUserCheck(jwt);
     }
-    
+
     api
       .getInitData()
       .then((data) => {
@@ -149,6 +149,8 @@ function App() {
   const handleSignIn = async ({ password, email }) => {
     await signIn({ password, email })
       .then((json) => {
+        // eslint-disable-next-line
+        console.log(json);
         setAuthed(true);
         localStorage.setItem('email', email);
         localStorage.setItem('token', json.token);

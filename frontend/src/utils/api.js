@@ -102,7 +102,8 @@ class Api {
 
 const api = new Api({
   token: 'c4b6220d-e8d9-4ddd-adea-4fda80f87475',
-  link: 'https://api.larikov.nomoredomains.rocks/',
+  // link: 'https://api.larikov.nomoredomains.rocks/',
+  link: 'http://localhost:3001/',
 });
 
 export default api;
