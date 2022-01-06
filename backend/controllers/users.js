@@ -12,6 +12,7 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUser = (req, res, next) => {
+  console.log(req.user);
   User.findById(req.user._id)
     .orFail(new CustomError(404, 'Данный пользователь не найден'))
     .then((user) => res.status(200).send(user))

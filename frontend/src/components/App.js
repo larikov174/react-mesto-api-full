@@ -5,6 +5,7 @@ import AuthContext from '../contexts/AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import api from '../utils/api';
 import useAuth from '../utils/useAuth';
+import useApi from '../utils/useApi';
 import Header from './Header';
 import Main from './Main';
 import Login from './Login';
@@ -29,19 +30,15 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const errorShow = (err) => console.error(err);
-  const { checkToken, signIn, signUp, signOut } = useAuth();
+  const { signIn, signUp, signOut } = useAuth();
+  const { getUser } = useApi();
   const [authed, setAuthed] = useState(false);
-  const jwt = localStorage.getItem('token');
+  const loggedUser = localStorage.getItem('email');
   const navigate = useNavigate();
-  const onLoadUserCheck = (token) => {
-    checkToken(token)
-      .then((json) => {
-        localStorage.setItem('_id', json.data._id);
-        localStorage.setItem('email', json.data.email);
-        setAuthed(true);
-        navigate('/main')
-      })
-      .catch(errorShow);
+  const onLoadUserCheck = async () => {
+    await getUser().then((userData) => {
+      setCurrentUser(()=> userData)
+    });
   };
 
   const closeAllPopups = () => {
@@ -54,18 +51,27 @@ function App() {
   };
 
   useEffect(() => {
-    if (jwt !== null) {
-      onLoadUserCheck(jwt);
-    }
 
-    api
-      .getInitData()
-      .then((data) => {
-        const [userData, initCards] = data;
-        setCurrentUser(userData);
-        setCards(initCards);
-      })
-      .catch(errorShow);
+    if (loggedUser) {
+      onLoadUserCheck();
+      // eslint-disable-next-line
+      console.log(currentUser);
+      // getUser()
+      //   .then((userData) => {
+      //     setCurrentUser(userData)
+
+      //   });
+
+      // getCards()
+      //   .then((cardData) => {
+      //     setCards(cardData);
+      //     setAuthed(true);
+      //   })
+      //   .then(() => {
+      //     navigate('/main');
+      //   })
+      //   .catch(errorShow);
+    }
 
     const escHandler = (evt) => evt.key === 'Escape' && closeAllPopups();
     document.addEventListener('keydown', escHandler);
@@ -149,9 +155,8 @@ function App() {
   const handleSignIn = async ({ password, email }) => {
     await signIn({ password, email })
       .then(() => {
+        localStorage.setItem('email', email);
         setAuthed(true);
-        // localStorage.setItem('email', email);
-        // localStorage.setItem('token', json.token);
         navigate('/main');
       })
       .catch(() => {
@@ -175,10 +180,16 @@ function App() {
       });
   };
 
-  const handleSignOut = () => {
-      signOut();
+  const handleSignOut = async () => {
+    await signOut();
+    try {
+      localStorage.removeItem('email');
       setAuthed(false);
       navigate('/sign-in');
+    }
+    catch (error) {
+      errorShow(error);
+    }
   }
 
   return (
