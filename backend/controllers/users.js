@@ -12,7 +12,6 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUser = (req, res, next) => {
-  console.log(req.user);
   User.findById(req.user._id)
     .orFail(new CustomError(404, 'Данный пользователь не найден'))
     .then((user) => res.status(200).send(user))
@@ -53,10 +52,10 @@ module.exports.login = (req, res, next) => {
       const token = jwt.sign(
         { _id: user._id },
         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-        { expiresIn: '7d' },
+        { expiresIn: '7 days' },
       );
       res.cookie('jwt', token, {
-        maxAge: 604800,
+        maxAge: 6048000,
         httpOnly: true,
         sameSite: true,
       })
@@ -68,7 +67,7 @@ module.exports.login = (req, res, next) => {
 module.exports.logout = (req, res) => {
   const token = req.cookies.jwt;
   res.clearCookie('jwt', token, {
-    maxAge: 604800,
+    maxAge: 6048000,
     httpOnly: true,
     sameSite: true,
   });

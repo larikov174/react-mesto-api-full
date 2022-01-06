@@ -3,9 +3,10 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import AuthContext from '../contexts/AuthContext';
 import ProtectedRoute from './ProtectedRoute';
-import api from '../utils/api';
 import useAuth from '../utils/useAuth';
-import useApi from '../utils/useApi';
+import useFindUser from '../utils/useFindUser';
+import useApiUser from '../utils/useApiUser';
+import useApiCard from '../utils/useApiCard';
 import Header from './Header';
 import Main from './Main';
 import Login from './Login';
@@ -27,19 +28,15 @@ function App() {
   const [isInfoTooltipState, setIsInfoTooltipState] = useState(false);
   const [isAuthOk, setIsAuthOk] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
-  const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const errorShow = (err) => console.error(err);
   const { signIn, signUp, signOut } = useAuth();
-  const { getUser } = useApi();
   const [authed, setAuthed] = useState(false);
   const loggedUser = localStorage.getItem('email');
+  const { setUserInfo, uploadAvatar } = useApiUser();
+  const { getCards, postCard, removeCard, setLike, removeLike } = useApiCard();
   const navigate = useNavigate();
-  const onLoadUserCheck = async () => {
-    await getUser().then((userData) => {
-      setCurrentUser(()=> userData)
-    });
-  };
+  const { user, setUser, isLoading } = useFindUser();
 
   const closeAllPopups = () => {
     setIsEditProfilePopupState(false);
@@ -51,26 +48,16 @@ function App() {
   };
 
   useEffect(() => {
-
     if (loggedUser) {
-      onLoadUserCheck();
-      // eslint-disable-next-line
-      console.log(currentUser);
-      // getUser()
-      //   .then((userData) => {
-      //     setCurrentUser(userData)
-
-      //   });
-
-      // getCards()
-      //   .then((cardData) => {
-      //     setCards(cardData);
-      //     setAuthed(true);
-      //   })
-      //   .then(() => {
-      //     navigate('/main');
-      //   })
-      //   .catch(errorShow);
+      getCards()
+        .then((cardData) => {
+          setCards(cardData);
+          setAuthed(true);
+        })
+        .then(() => {
+          navigate('/main');
+        })
+        .catch(errorShow);
     }
 
     const escHandler = (evt) => evt.key === 'Escape' && closeAllPopups();
@@ -79,7 +66,7 @@ function App() {
     return () => {
       document.removeEventListener('keydown', escHandler);
     };
-  }, []);
+  }, [loggedUser]);
 
   const openEditProfilePopup = () => {
     setIsEditProfilePopupState(true);
@@ -103,33 +90,28 @@ function App() {
       setCards(cards.map((mappedCard) => (mappedCard._id === card._id ? newCard : mappedCard)));
     };
     return isLiked
-      ? api.removeLike(card).then(update).catch(errorShow)
-      : api.setLike(card).then(update).catch(errorShow);
+      ? removeLike(card).then(update).catch(errorShow)
+      : setLike(card).then(update).catch(errorShow);
   };
 
   const handleUpdateUser = async (newInfo) => {
-    await api
-      .setUserInfo(newInfo)
-      .then((data) => {
-        setCurrentUser(data);
+    await setUserInfo(newInfo)
+      .then(() => {
         closeAllPopups();
       })
       .catch(errorShow);
   };
 
   const handleUpdateAvatar = async ({ avatar }) => {
-    await api
-      .uploadAvatar(avatar)
-      .then((data) => {
-        setCurrentUser(data);
+    await uploadAvatar(avatar)
+      .then(() => {
         closeAllPopups();
       })
       .catch(errorShow);
   };
 
   const handleAddPlaceSubmit = async (card) => {
-    await api
-      .postCard(card)
+    await postCard(card)
       .then((data) => {
         setCards([data, ...cards]);
         closeAllPopups();
@@ -143,8 +125,7 @@ function App() {
   };
 
   const handleDeletePlaceSubmit = async () => {
-    await api
-      .removeCard(selectedCard)
+    await removeCard(selectedCard)
       .then(() => {
         setCards((data) => data.filter((card) => card._id !== selectedCard._id));
         closeAllPopups();
@@ -195,7 +176,7 @@ function App() {
   return (
     <div className="body">
       <div className="page">
-        <CurrentUserContext.Provider value={currentUser}>
+        <CurrentUserContext.Provider value={{ user, setUser, isLoading }}>
           <AuthContext.Provider value={authed}>
             <Header onSignOut={handleSignOut} />
             <Routes>
