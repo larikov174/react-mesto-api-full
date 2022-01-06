@@ -3,8 +3,10 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import AuthContext from '../contexts/AuthContext';
 import ProtectedRoute from './ProtectedRoute';
-import api from '../utils/api';
 import useAuth from '../utils/useAuth';
+import useFindUser from '../utils/useFindUser';
+import useApiUser from '../utils/useApiUser';
+import useApiCard from '../utils/useApiCard';
 import Header from './Header';
 import Main from './Main';
 import Login from './Login';
@@ -26,23 +28,15 @@ function App() {
   const [isInfoTooltipState, setIsInfoTooltipState] = useState(false);
   const [isAuthOk, setIsAuthOk] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
-  const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const errorShow = (err) => console.error(err);
-  const { checkToken, signIn, signUp } = useAuth();
+  const { signIn, signUp, signOut } = useAuth();
   const [authed, setAuthed] = useState(false);
-  const jwt = localStorage.getItem('token');
+  const loggedUser = localStorage.getItem('email');
+  const { setUserInfo, uploadAvatar } = useApiUser();
+  const { getCards, postCard, removeCard, setLike, removeLike } = useApiCard();
   const navigate = useNavigate();
-  const onLoadUserCheck = (token) => {
-    checkToken(token)
-      .then((json) => {
-        localStorage.setItem('_id', json.data._id);
-        localStorage.setItem('email', json.data.email);
-        setAuthed(true);
-        navigate('/main')
-      })
-      .catch(errorShow);
-  };
+  const { user, setUser, isLoading } = useFindUser();
 
   const closeAllPopups = () => {
     setIsEditProfilePopupState(false);
@@ -54,18 +48,17 @@ function App() {
   };
 
   useEffect(() => {
-    if (jwt !== null) {
-      onLoadUserCheck(jwt);
+    if (loggedUser) {
+      getCards()
+        .then((cardData) => {
+          setCards(cardData);
+          setAuthed(true);
+        })
+        .then(() => {
+          navigate('/main');
+        })
+        .catch(errorShow);
     }
-    
-    api
-      .getInitData()
-      .then((data) => {
-        const [userData, initCards] = data;
-        setCurrentUser(userData);
-        setCards(initCards);
-      })
-      .catch(errorShow);
 
     const escHandler = (evt) => evt.key === 'Escape' && closeAllPopups();
     document.addEventListener('keydown', escHandler);
@@ -73,7 +66,7 @@ function App() {
     return () => {
       document.removeEventListener('keydown', escHandler);
     };
-  }, []);
+  }, [loggedUser]);
 
   const openEditProfilePopup = () => {
     setIsEditProfilePopupState(true);
@@ -97,33 +90,28 @@ function App() {
       setCards(cards.map((mappedCard) => (mappedCard._id === card._id ? newCard : mappedCard)));
     };
     return isLiked
-      ? api.removeLike(card).then(update).catch(errorShow)
-      : api.setLike(card).then(update).catch(errorShow);
+      ? removeLike(card).then(update).catch(errorShow)
+      : setLike(card).then(update).catch(errorShow);
   };
 
   const handleUpdateUser = async (newInfo) => {
-    await api
-      .setUserInfo(newInfo)
-      .then((data) => {
-        setCurrentUser(data);
+    await setUserInfo(newInfo)
+      .then(() => {
         closeAllPopups();
       })
       .catch(errorShow);
   };
 
   const handleUpdateAvatar = async ({ avatar }) => {
-    await api
-      .uploadAvatar(avatar)
-      .then((data) => {
-        setCurrentUser(data);
+    await uploadAvatar(avatar)
+      .then(() => {
         closeAllPopups();
       })
       .catch(errorShow);
   };
 
   const handleAddPlaceSubmit = async (card) => {
-    await api
-      .postCard(card)
+    await postCard(card)
       .then((data) => {
         setCards([data, ...cards]);
         closeAllPopups();
@@ -137,8 +125,7 @@ function App() {
   };
 
   const handleDeletePlaceSubmit = async () => {
-    await api
-      .removeCard(selectedCard)
+    await removeCard(selectedCard)
       .then(() => {
         setCards((data) => data.filter((card) => card._id !== selectedCard._id));
         closeAllPopups();
@@ -148,10 +135,9 @@ function App() {
 
   const handleSignIn = async ({ password, email }) => {
     await signIn({ password, email })
-      .then((json) => {
-        setAuthed(true);
+      .then(() => {
         localStorage.setItem('email', email);
-        localStorage.setItem('token', json.token);
+        setAuthed(true);
         navigate('/main');
       })
       .catch(() => {
@@ -175,17 +161,22 @@ function App() {
       });
   };
 
-  const handleSignOut = () => {
-      localStorage.removeItem('token');
+  const handleSignOut = async () => {
+    await signOut();
+    try {
       localStorage.removeItem('email');
-      localStorage.removeItem('_id');
       setAuthed(false);
+      navigate('/sign-in');
+    }
+    catch (error) {
+      errorShow(error);
+    }
   }
 
   return (
     <div className="body">
       <div className="page">
-        <CurrentUserContext.Provider value={currentUser}>
+        <CurrentUserContext.Provider value={{ user, setUser, isLoading }}>
           <AuthContext.Provider value={authed}>
             <Header onSignOut={handleSignOut} />
             <Routes>

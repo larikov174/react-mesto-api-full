@@ -1,9 +1,10 @@
 import React from 'react';
 
 function Footer() {
+  const currentDate = new Date();
   return (
     <footer className="footer">
-      <h2 className="footer__copyright">&copy; 2021 Mesto Russia</h2>
+      <h2 className="footer__copyright">&copy; {currentDate.getFullYear()} Mesto Russia</h2>
     </footer>
   );
 }

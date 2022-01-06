@@ -1,15 +1,15 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const { celebrate, Joi, errors } = require('celebrate');
-const { createUser, login } = require('./controllers/users');
+const { createUser, login, logout } = require('./controllers/users');
 const CustomError = require('./utils/CustomError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
+const cors = require('./middlewares/cors');
 const cards = require('./routes/cards');
 const users = require('./routes/users');
 
@@ -25,12 +25,14 @@ mongoose
   .catch((error) => console.log(error));
 
 const app = express();
-app.use(cors());
+
 app.use(helmet());
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
+
+app.use(cors);
 
 app.post(
   '/signin',
@@ -57,9 +59,16 @@ app.post(
   createUser,
 );
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 app.use(auth);
 app.use('/cards', cards);
 app.use('/users', users);
+app.get('/signout', logout);
 
 app.use(errorLogger);
 app.use(errors());

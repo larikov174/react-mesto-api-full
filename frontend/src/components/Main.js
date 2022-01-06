@@ -11,18 +11,18 @@ function Main({
   onCardLike,
   onCardDelete,
 }) {
-  const { name, about, avatar } = React.useContext(CurrentUserContext);
+  const data = React.useContext(CurrentUserContext);
 
   return (
     <>
       <main>
         <section className="profile">
           <div className="profile__avatar-overlay" onClick={onEditAvatar} role="presentation">
-            <img className="profile__avatar" src={avatar} alt="Аватар" />
+            <img className="profile__avatar" src={data.user.avatar} alt="Аватар" />
           </div>
           <div className="profile__info">
-            <h1 className="profile__title">{name}</h1>
-            <p className="profile__subtitle">{about}</p>
+            <h1 className="profile__title">{data.user.name}</h1>
+            <p className="profile__subtitle">{data.user.about}</p>
             <button className="profile__edit-button" type="button" onClick={onEditProfile} />
           </div>
           <button className="profile__add-button" type="button" onClick={onAddPlace} />

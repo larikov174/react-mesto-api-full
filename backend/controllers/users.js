@@ -52,16 +52,26 @@ module.exports.login = (req, res, next) => {
       const token = jwt.sign(
         { _id: user._id },
         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-        { expiresIn: '7d' },
+        { expiresIn: '7 days' },
       );
       res.cookie('jwt', token, {
-        maxAge: 604800,
+        maxAge: 6048000,
         httpOnly: true,
         sameSite: true,
       })
         .end();
     })
     .catch(next);
+};
+
+module.exports.logout = (req, res) => {
+  const token = req.cookies.jwt;
+  res.clearCookie('jwt', token, {
+    maxAge: 6048000,
+    httpOnly: true,
+    sameSite: true,
+  });
+  return res.status(200).send('сессия закрыта');
 };
 
 module.exports.updateUserData = (req, res, next) => {

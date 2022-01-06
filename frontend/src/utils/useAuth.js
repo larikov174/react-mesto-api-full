@@ -1,7 +1,9 @@
+import baseUrl from './const';
+
 function useAuth() {
-  const baseUrl = 'https://api.larikov.nomoredomains.rocks/';
+
   const handleResponse = (res) => {
-    const answer = res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
+    const answer = res.ok ? res.text() : Promise.reject(`Ошибка: ${res.status}`);
     return answer;
   };
 
@@ -22,6 +24,7 @@ function useAuth() {
     signIn({ password, email }) {
       return fetch(`${baseUrl}signin`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -32,14 +35,10 @@ function useAuth() {
       }).then(handleResponse);
     },
 
-    checkToken(token) {
-      return fetch(`${baseUrl}users/me`, {
+    signOut() {
+      return fetch(`${baseUrl}signout`, {
         method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: 'include',
       }).then(handleResponse);
     },
   };
