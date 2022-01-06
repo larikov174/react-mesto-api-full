@@ -6,7 +6,9 @@
 ---
 
 ## Публичный ip **51.250.16.147**
-Бэкенд можно найти [по этой ссылке][back]
-Фронт можно найти [по этой ссылке][front] 
-[back]: https://api.larikov.nomoredomains.rocks
-[front]: https://larikov.nomoredomains.rocks
+[2]: https://api.larikov.nomoredomains.rocks
+[1]: https://larikov.nomoredomains.rocks
+
+Фронт можно найти [по этой ссылке][1]
+
+Бэкенд можно найти [по этой ссылке][2]
