@@ -35,7 +35,7 @@ app.use(requestLogger);
 app.use(cors);
 
 app.post(
-  '/signin',
+  '/login',
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
@@ -46,7 +46,7 @@ app.post(
 );
 
 app.post(
-  '/signup',
+  '/register',
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
@@ -68,7 +68,7 @@ app.get('/crash-test', () => {
 app.use(auth);
 app.use('/cards', cards);
 app.use('/users', users);
-app.get('/signout', logout);
+app.get('/logout', logout);
 
 app.use(errorLogger);
 app.use(errors());

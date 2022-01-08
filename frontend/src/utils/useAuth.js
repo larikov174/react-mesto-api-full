@@ -24,7 +24,7 @@ export default function useAuth() {
     return answer;
   };
 
-  const signUp = async ({ password, email }) => fetch(`${baseUrl}signup`, {
+  const register = async ({ password, email }) => fetch(`${baseUrl}register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export default function useAuth() {
     }),
   }).then(handleResponse);
 
-  const signIn = async ({ password, email }) => fetch(`${baseUrl}signin`, {
+  const login = async ({ password, email }) => fetch(`${baseUrl}login`, {
     method: 'POST',
     credentials: 'include',
     redirect: 'follow',
@@ -51,15 +51,15 @@ export default function useAuth() {
       await setUserContext();
     });
 
-  const signOut = async () => fetch(`${baseUrl}signout`, {
+  const logout = async () => fetch(`${baseUrl}logout`, {
     method: 'GET',
     credentials: 'include',
   }).then(handleResponse);
 
   return {
-    signUp,
-    signIn,
-    signOut,
+    register,
+    login,
+    logout,
     error,
   };
 }

@@ -59,11 +59,13 @@ module.exports.login = (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       })
-        .then(() => {
-          res.set('location', `${req.headers.origin}/main`);
-          res.status(301).send()
-            .end();
-        });
+      // res.header('Access-Control-Allow-Origin', origin);
+      // res.header('Access-Control-Allow-Credentials', true);
+      // res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+      // res.header('Access-Control-Allow-Headers', 'access-control-request-headers');
+      // res.set('location', `${req.headers.origin}/main`);
+      // res.status(301).send();
+        .end();
     })
     .catch(next);
 };

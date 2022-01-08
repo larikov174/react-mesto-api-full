@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AuthForm from './AuthForm';
 
-export default function Register({ onSignUp }) {
+export default function Register({ onRegistration }) {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [buttonTitle, setButtonTitle] = useState('Зарегистрироваться');
@@ -9,15 +9,15 @@ export default function Register({ onSignUp }) {
   const onEmailChange = (e) => setEmail(e.target.value);
   const onPassChange = (e) => setPassword(e.target.value);
 
-  const handleSignUp = (e) => {
+  const handleRegistration = (e) => {
     e.preventDefault();
     setButtonTitle('Обработка...');
-    onSignUp({ password, email })
+    onRegistration({ password, email })
   };
 
   return (
     <>
-      <AuthForm className="login" onSubmit={handleSignUp}>
+      <AuthForm className="login" onSubmit={handleRegistration}>
         <h2 className="login__title">Регистрация</h2>
         <input
           className="login__input"

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import baseUrl from './const';
 
 export default function useHandleUser() {
@@ -12,7 +13,7 @@ export default function useHandleUser() {
       return fetch(`${baseUrl}users/me`, {
         method: 'GET',
         credentials: 'include',
-      }).then(handleResponse);
+      }).then(res=>res.json());
     },
 
     setUserInfo(data) {

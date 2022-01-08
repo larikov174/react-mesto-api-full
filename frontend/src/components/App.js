@@ -4,7 +4,7 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import ProtectedRoute from './ProtectedRoute';
 import useAuth from '../utils/useAuth';
-import useFindUser from '../utils/useFindUser';
+// import useFindUser from '../utils/useFindUser';
 import useApiUser from '../utils/useApiUser';
 import useApiCard from '../utils/useApiCard';
 import Header from './Header';
@@ -29,11 +29,20 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
   const errorShow = (err) => console.error(err);
-  const { signIn, signUp, signOut } = useAuth();
+  const { login, register, logout } = useAuth();
   const { getUserInfo, setUserInfo, uploadAvatar } = useApiUser();
   const { getCards, postCard, removeCard, setLike, removeLike } = useApiCard();
   const navigate = useNavigate();
-  const { user } = useFindUser();
+  // const { user } = useFindUser();
+  const [user, setUser] = useState(null);
+  const loadUser = async () => {
+    const res = await getUserInfo();
+    return setUser(res)
+  };
+  // const loadCards = async () => {
+  //   const res = await getCards();
+  //   return setCards(res)
+  // }
 
   const closeAllPopups = () => {
     setIsEditProfilePopupState(false);
@@ -45,16 +54,29 @@ function App() {
   };
 
   useEffect(() => {
-    getUserInfo()
-      .then(() => {
-        getCards()
-          .then((cardData) => {
-            setCards(cardData);
+    // loadUser()
+    //   .then(() => {
+    //     localStorage.setItem('logged', true);
+    //     loadCards()
+    //   })
+    //   .then(() => {
+    //     navigate('/main')
+    //   })
+    //   .catch((error) => {
+    //     errorShow(error);
+    //   })
+    localStorage.setItem('logged', false);
+    loadUser()
+    .then(() => {
+      getCards()
+      .then((cardData) => {
+          setCards(cardData);
+          }).then(() => {
+            navigate('/main')
           })
-          .then(() => {
-            navigate('/main');
-          })
-          .catch(errorShow);
+      })
+      .catch((error) => {
+        errorShow(error);
       })
 
     const escHandler = (evt) => evt.key === 'Escape' && closeAllPopups();
@@ -130,36 +152,39 @@ function App() {
       .catch(errorShow);
   };
 
-  const handleSignIn = async ({ password, email }) => {
-    try {
-      await signIn({ password, email })
-      navigate('/main')
-      getCards()
-        .then((cardData) => {
-          setCards(cardData);
-        }).then(() => {
-        })
-    }
-    catch (error) {
-      errorShow(error);
-    }
-  };
+  const handleLogin = ({ password, email }) => {
+    login({ password, email })
+      .then(() => {
+        loadUser();
+        getCards()
+          .then((cardData) => {
+            setCards(cardData);
+          }).then(() => {
+            navigate('/main')
+          })
+      })
+      .catch((error) => {
+        errorShow(error);
+      })
+  }
 
-  const handleSignUp = async ({ password, email }) => {
-    await signUp({ password, email })
+
+  const handleRegistration = async ({ password, email }) => {
+    await register({ password, email })
       .then(() => {
         setIsInfoTooltipState(true);
-        navigate('/sign-in');
+        navigate('/login');
       })
       .catch(() => {
         setIsInfoTooltipState(true);
       });
   };
 
-  const handleSignOut = async () => {
-    await signOut();
+  const handleLogout = async () => {
+    await logout();
     try {
-      navigate('/sign-in');
+      setUser(null);
+      navigate('/login');
     }
     catch (error) {
       errorShow(error);
@@ -170,10 +195,10 @@ function App() {
     <div className="body">
       <div className="page">
         <CurrentUserContext.Provider value={{ user }}>
-          <Header onSignOut={handleSignOut} />
+          <Header onLogout={handleLogout} />
           <Routes>
-            <Route path="/sign-in" element={<Login onLogin={handleSignIn} />} />
-            <Route path="/sign-up" element={<Register onSignUp={handleSignUp} />} />
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route path="/register" element={<Register onRegistration={handleRegistration} />} />
             <Route
               path="/*"
               element={
