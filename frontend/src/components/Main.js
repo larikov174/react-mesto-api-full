@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Card from './Card';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 
@@ -11,18 +11,18 @@ function Main({
   onCardLike,
   onCardDelete,
 }) {
-  const data = React.useContext(CurrentUserContext);
+  const { user } = useContext(CurrentUserContext);
 
   return (
     <>
       <main>
         <section className="profile">
           <div className="profile__avatar-overlay" onClick={onEditAvatar} role="presentation">
-            <img className="profile__avatar" src={data.user.avatar} alt="Аватар" />
+            <img className="profile__avatar" src={user.avatar} alt="Аватар" />
           </div>
           <div className="profile__info">
-            <h1 className="profile__title">{data.user.name}</h1>
-            <p className="profile__subtitle">{data.user.about}</p>
+            <h1 className="profile__title">{user.name}</h1>
+            <p className="profile__subtitle">{user.about}</p>
             <button className="profile__edit-button" type="button" onClick={onEditProfile} />
           </div>
           <button className="profile__add-button" type="button" onClick={onAddPlace} />

@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import AuthContext from '../contexts/AuthContext';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 
 function Header({ onSignOut }) {
   const location = useLocation().pathname;
-  const authed = React.useContext(AuthContext);
-  const [linkDest, setLinkDest] = useState('/sign-in');
-  const [linkTitle, setLinkTitle] = useState();
+  const { user } = useContext(CurrentUserContext);
+  const [linkDest, setLinkDest] = useState('/sign-up');
+  const [linkTitle, setLinkTitle] = useState('Регистрация');
   const [menuOpened, setMenuOpened] = useState(false);
-  const userEmail = localStorage.getItem('email');
+
+  const email = user ? user.email : '';
+
   const handleSignOut = () => {
     setMenuOpened(false);
     onSignOut();
   };
   const renderBurger = () => setMenuOpened(!menuOpened);
   const renderLink = () => {
-    if (!authed && location === '/sign-in') {
+    if (!user && location === '/sign-in') {
       setLinkTitle('Регистрация');
       setLinkDest('/sign-up');
-    } else if (!authed && location === '/sign-up') {
+    } else if (!user && location === '/sign-up') {
       setLinkTitle('Войти');
       setLinkDest('/sign-in');
     } else {
@@ -34,24 +36,24 @@ function Header({ onSignOut }) {
   return (
     <>
       <div className={`burger ${menuOpened ? 'burger_type_active' : ''}`}>
-        <p className="burger__text">{userEmail}&nbsp;</p>
-        <Link className="burger__link" to={linkDest} onClick={handleSignOut}>
+        <p className="burger__text">{email}&nbsp;</p>
+        <Link className="burger__link" to={linkDest} onClick={user && handleSignOut}>
           {linkTitle}
         </Link>
       </div>
       <header className="header">
         <div className="header__logo" title="Mesto" />
         <div className="header__actions">
-          <p className="header__text">{userEmail}&nbsp;</p>
+          <p className="header__text">{email}&nbsp;</p>
           <Link
             to={linkDest}
-            className={`header__link ${authed && 'header__link_idle-on-mobile'}`}
-            onClick={handleSignOut}
+            className={`header__link ${user && 'header__link_idle-on-mobile'}`}
+            onClick={user && handleSignOut}
           >
             {linkTitle}
           </Link>
           <button
-            className={`${authed ? 'header__burger' : 'header__burger_idle'} ${
+            className={`${user ? 'header__burger' : 'header__burger_idle'} ${
               menuOpened ? 'header__burger_type_close' : ''
             }
             `}

@@ -59,7 +59,11 @@ module.exports.login = (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       })
-        .end();
+        .then(() => {
+          res.set('location', `${req.headers.origin}/main`);
+          res.status(301).send()
+            .end();
+        });
     })
     .catch(next);
 };

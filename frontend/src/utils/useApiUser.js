@@ -8,6 +8,13 @@ export default function useHandleUser() {
   };
 
   return {
+    getUserInfo() {
+      return fetch(`${baseUrl}users/me`, {
+        method: 'GET',
+        credentials: 'include',
+      }).then(handleResponse);
+    },
+
     setUserInfo(data) {
       return fetch(`${baseUrl}users/me`, {
         method: 'PATCH',

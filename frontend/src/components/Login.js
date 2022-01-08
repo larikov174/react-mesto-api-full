@@ -9,8 +9,13 @@ export default function Login({ onLogin }) {
   const onPassChange = (e) => setPassword(e.target.value);
   const handleLogin = (e) => {
     e.preventDefault();
-    setButtonTitle('Обработка...');
     onLogin({ password, email })
+    try {
+      setButtonTitle('Обработка...');
+    }
+    catch (err) {
+      setButtonTitle('Ошибка!')
+    }
   };
 
   return (

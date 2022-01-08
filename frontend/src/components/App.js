@@ -1,7 +1,7 @@
+/* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import CurrentUserContext from '../contexts/CurrentUserContext';
-import AuthContext from '../contexts/AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import useAuth from '../utils/useAuth';
 import useFindUser from '../utils/useFindUser';
@@ -26,17 +26,14 @@ function App() {
   const [isEditAvatarPopupState, setIsEditAvatarPopupState] = useState(false);
   const [isImgPopupState, setIsImgPopupState] = useState(false);
   const [isInfoTooltipState, setIsInfoTooltipState] = useState(false);
-  const [isAuthOk, setIsAuthOk] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
   const errorShow = (err) => console.error(err);
   const { signIn, signUp, signOut } = useAuth();
-  const [authed, setAuthed] = useState(false);
-  const loggedUser = localStorage.getItem('email');
-  const { setUserInfo, uploadAvatar } = useApiUser();
+  const { getUserInfo, setUserInfo, uploadAvatar } = useApiUser();
   const { getCards, postCard, removeCard, setLike, removeLike } = useApiCard();
   const navigate = useNavigate();
-  const { user, setUser, isLoading } = useFindUser();
+  const { user } = useFindUser();
 
   const closeAllPopups = () => {
     setIsEditProfilePopupState(false);
@@ -48,17 +45,17 @@ function App() {
   };
 
   useEffect(() => {
-    if (loggedUser) {
-      getCards()
-        .then((cardData) => {
-          setCards(cardData);
-          setAuthed(true);
-        })
-        .then(() => {
-          navigate('/main');
-        })
-        .catch(errorShow);
-    }
+    getUserInfo()
+      .then(() => {
+        getCards()
+          .then((cardData) => {
+            setCards(cardData);
+          })
+          .then(() => {
+            navigate('/main');
+          })
+          .catch(errorShow);
+      })
 
     const escHandler = (evt) => evt.key === 'Escape' && closeAllPopups();
     document.addEventListener('keydown', escHandler);
@@ -66,7 +63,7 @@ function App() {
     return () => {
       document.removeEventListener('keydown', escHandler);
     };
-  }, [loggedUser]);
+  }, []);
 
   const openEditProfilePopup = () => {
     setIsEditProfilePopupState(true);
@@ -134,29 +131,27 @@ function App() {
   };
 
   const handleSignIn = async ({ password, email }) => {
-    await signIn({ password, email })
-      .then(() => {
-        localStorage.setItem('email', email);
-        setAuthed(true);
-        navigate('/main');
-      })
-      .catch(() => {
-        setAuthed(false);
-        setIsAuthOk(false);
-        setIsInfoTooltipState(true);
-      });
+    try {
+      await signIn({ password, email })
+      navigate('/main')
+      getCards()
+        .then((cardData) => {
+          setCards(cardData);
+        }).then(() => {
+        })
+    }
+    catch (error) {
+      errorShow(error);
+    }
   };
 
   const handleSignUp = async ({ password, email }) => {
     await signUp({ password, email })
       .then(() => {
-        setIsAuthOk(true);
         setIsInfoTooltipState(true);
         navigate('/sign-in');
       })
       .catch(() => {
-        setAuthed(false);
-        setIsAuthOk(false);
         setIsInfoTooltipState(true);
       });
   };
@@ -164,8 +159,6 @@ function App() {
   const handleSignOut = async () => {
     await signOut();
     try {
-      localStorage.removeItem('email');
-      setAuthed(false);
       navigate('/sign-in');
     }
     catch (error) {
@@ -176,53 +169,51 @@ function App() {
   return (
     <div className="body">
       <div className="page">
-        <CurrentUserContext.Provider value={{ user, setUser, isLoading }}>
-          <AuthContext.Provider value={authed}>
-            <Header onSignOut={handleSignOut} />
-            <Routes>
-              <Route path="/sign-in" element={<Login onLogin={handleSignIn} />} />
-              <Route path="/sign-up" element={<Register onSignUp={handleSignUp} />} />
-              <Route
-                path="/*"
-                element={
-                  <ProtectedRoute>
-                    <Main
-                      onEditProfile={openEditProfilePopup}
-                      onAddPlace={openAddPlacePopup}
-                      onEditAvatar={openEditAvatarPopup}
-                      onCardClick={handleCardClick}
-                      onCardLike={handleLikeClick}
-                      onCardDelete={handleDeleteClick}
-                      cards={cards}
-                    />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-            <Footer />
-            <EditProfilePopup
-              isOpen={isEditProfilePopupState}
-              onUpdateUser={handleUpdateUser}
-              onClose={closeAllPopups}
+        <CurrentUserContext.Provider value={{ user }}>
+          <Header onSignOut={handleSignOut} />
+          <Routes>
+            <Route path="/sign-in" element={<Login onLogin={handleSignIn} />} />
+            <Route path="/sign-up" element={<Register onSignUp={handleSignUp} />} />
+            <Route
+              path="/*"
+              element={
+                <ProtectedRoute>
+                  <Main
+                    onEditProfile={openEditProfilePopup}
+                    onAddPlace={openAddPlacePopup}
+                    onEditAvatar={openEditAvatarPopup}
+                    onCardClick={handleCardClick}
+                    onCardLike={handleLikeClick}
+                    onCardDelete={handleDeleteClick}
+                    cards={cards}
+                  />
+                </ProtectedRoute>
+              }
             />
-            <EditAvatarPopup
-              isOpen={isEditAvatarPopupState}
-              onUpdateAvatar={handleUpdateAvatar}
-              onClose={closeAllPopups}
-            />
-            <AddPlacePopup
-              isOpen={isAddPlacePopupState}
-              onAddPlace={handleAddPlaceSubmit}
-              onClose={closeAllPopups}
-            />
-            <DeletePlacePopup
-              isOpen={isDeletePlacePopupState}
-              onCardDelete={handleDeletePlaceSubmit}
-              onClose={closeAllPopups}
-            />
-            <ImagePopup card={selectedCard} isOpen={isImgPopupState} onClose={closeAllPopups} />
-            <InfoTooltip isOpen={isInfoTooltipState} onClose={closeAllPopups} noteType={isAuthOk} />
-          </AuthContext.Provider>
+          </Routes>
+          <Footer />
+          <EditProfilePopup
+            isOpen={isEditProfilePopupState}
+            onUpdateUser={handleUpdateUser}
+            onClose={closeAllPopups}
+          />
+          <EditAvatarPopup
+            isOpen={isEditAvatarPopupState}
+            onUpdateAvatar={handleUpdateAvatar}
+            onClose={closeAllPopups}
+          />
+          <AddPlacePopup
+            isOpen={isAddPlacePopupState}
+            onAddPlace={handleAddPlaceSubmit}
+            onClose={closeAllPopups}
+          />
+          <DeletePlacePopup
+            isOpen={isDeletePlacePopupState}
+            onCardDelete={handleDeletePlaceSubmit}
+            onClose={closeAllPopups}
+          />
+          <ImagePopup card={selectedCard} isOpen={isImgPopupState} onClose={closeAllPopups} />
+          <InfoTooltip isOpen={isInfoTooltipState} onClose={closeAllPopups} />
         </CurrentUserContext.Provider>
       </div>
     </div>

@@ -2,33 +2,28 @@ import { useState, useEffect } from 'react';
 import baseUrl from './const';
 
 export default function useFindUser() {
-  const loggedUser = localStorage.getItem('email');
-  const [user, setUser] = useState(null);
-  const [isLoading, setLoading] = useState(true);
+  const [user, setUser] = useState();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function findUser() {
       await fetch(`${baseUrl}users/me`, {
         method: 'GET',
         credentials: 'include',
-        headers: {
-          'Content-Type': 'text/plain',
-        },
       })
         .then((res) => res.json())
         .then((res) => {
-          setUser(res);
-          setLoading(false);
+          if(res._id){
+            setUser(res);
+          }
         })
-        .catch(() => {
-          setLoading(false);
-        });
+        .catch((err) => setError(err));
     }
     findUser();
-  }, [loggedUser]);
+  }, []);
 
   return {
     user,
-    isLoading
+    error,
   }
 }
