@@ -45,6 +45,17 @@ module.exports.createUser = (req, res, next) => {
   });
 };
 
+module.exports.checkToken = (req, res) => {
+  // console.log(req.headers.origin);
+  // res.header('Access-Control-Allow-Origin', req.headers.origin);
+  // res.header('Access-Control-Allow-Credentials', true);
+  // res.header('Access-Control-Allow-Methods', 'GET');
+  // res.header('Access-Control-Allow-Headers', 'access-control-request-headers');
+  // res.set('location', `${req.headers.origin}/main`);
+  res.status(200).send({ token: 'ok' })
+    .end();
+};
+
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
@@ -59,12 +70,6 @@ module.exports.login = (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       })
-      // res.header('Access-Control-Allow-Origin', origin);
-      // res.header('Access-Control-Allow-Credentials', true);
-      // res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
-      // res.header('Access-Control-Allow-Headers', 'access-control-request-headers');
-      // res.set('location', `${req.headers.origin}/main`);
-      // res.status(301).send();
         .end();
     })
     .catch(next);

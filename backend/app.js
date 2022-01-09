@@ -5,7 +5,12 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const { celebrate, Joi, errors } = require('celebrate');
-const { createUser, login, logout } = require('./controllers/users');
+const {
+  createUser,
+  login,
+  logout,
+  checkToken,
+} = require('./controllers/users');
 const CustomError = require('./utils/CustomError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
@@ -66,6 +71,7 @@ app.get('/crash-test', () => {
 });
 
 app.use(auth);
+app.use('/check', checkToken);
 app.use('/cards', cards);
 app.use('/users', users);
 app.get('/logout', logout);

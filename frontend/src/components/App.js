@@ -65,19 +65,19 @@ function App() {
     //   .catch((error) => {
     //     errorShow(error);
     //   })
-    localStorage.setItem('logged', false);
-    loadUser()
-    .then(() => {
-      getCards()
-      .then((cardData) => {
-          setCards(cardData);
-          }).then(() => {
-            navigate('/main')
-          })
-      })
-      .catch((error) => {
-        errorShow(error);
-      })
+
+    // loadUser()
+    // .then(() => {
+    //   getCards()
+    //   .then((cardData) => {
+    //       setCards(cardData);
+    //       }).then(() => {
+    //         navigate('/main')
+    //       })
+    //   })
+    //   .catch((error) => {
+    //     errorShow(error);
+    //   })
 
     const escHandler = (evt) => evt.key === 'Escape' && closeAllPopups();
     document.addEventListener('keydown', escHandler);

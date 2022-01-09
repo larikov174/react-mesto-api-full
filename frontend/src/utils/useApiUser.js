@@ -10,8 +10,16 @@ export default function useHandleUser() {
 
   return {
     getUserInfo() {
-      return fetch(`${baseUrl}users/me`, {
+      return fetch(`${baseUrl}check`, {
         method: 'GET',
+        credentials: 'include',
+      }).then(res=>res.json());
+    },
+
+    checkToken() {
+      return fetch(`${baseUrl}check`, {
+        method: 'GET',
+        redirect: 'follow',
         credentials: 'include',
       }).then(res=>res.json());
     },
