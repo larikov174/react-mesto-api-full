@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
@@ -33,11 +34,10 @@ function App() {
   const { getUserInfo, setUserInfo, uploadAvatar } = useApiUser();
   const { getCards, postCard, removeCard, setLike, removeLike } = useApiCard();
   const navigate = useNavigate();
-  // const { user } = useFindUser();
   const [user, setUser] = useState(null);
   const loadUser = async () => {
     const res = await getUserInfo();
-    return setUser(res)
+    return console.log(res)
   };
   // const loadCards = async () => {
   //   const res = await getCards();
@@ -54,6 +54,7 @@ function App() {
   };
 
   useEffect(() => {
+
     // loadUser()
     //   .then(() => {
     //     localStorage.setItem('logged', true);
@@ -183,7 +184,7 @@ function App() {
   const handleLogout = async () => {
     await logout();
     try {
-      setUser(null);
+      // setUser(null);
       navigate('/login');
     }
     catch (error) {

@@ -38,7 +38,6 @@ export default function useAuth() {
   const login = async ({ password, email }) => fetch(`${baseUrl}login`, {
     method: 'POST',
     credentials: 'include',
-    redirect: 'follow',
     headers: {
       'Content-Type': 'application/json',
     },

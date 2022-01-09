@@ -1,29 +1,32 @@
-import { useState, useEffect } from 'react';
-import baseUrl from './const';
+import React, { useState, useEffect } from 'react';
+import useApiUser from "./useApiUser";
 
 export default function useFindUser() {
-  const [user, setUser] = useState();
-  const [error, setError] = useState(null);
+  const { getUserInfo } = useApiUser();
+  const [user, setUser] = useState(null);
+  const [userChecked, setUserChecked] = useState(null);
 
   useEffect(() => {
-    async function findUser() {
-      await fetch(`${baseUrl}users/me`, {
-        method: 'GET',
-        credentials: 'include',
+    getUserInfo()
+      .then(res => {
+          setUser(res);
       })
-        .then((res) => res.json())
-        .then((res) => {
-          if(res._id){
-            setUser(res);
-          }
-        })
-        .catch((err) => setError(err));
-    }
-    findUser();
-  }, []);
+      .finally(() => {
+          setUserChecked(true);
+      });
+
+    return () => {
+      setUserChecked(null);
+    };
+  }, [])
+
+  if (!userChecked) {
+    return (
+      <div>Check user login...</div>
+    )
+  }
 
   return {
     user,
-    error,
   }
 }

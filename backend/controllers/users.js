@@ -13,7 +13,7 @@ module.exports.getUsers = (req, res, next) => {
 
 module.exports.getUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(new CustomError(404, 'Данный пользователь не найден'))
+    .orFail(new CustomError(401, 'Вы не авторизованы в системе'))
     .then((user) => res.status(200).send(user))
     .catch(next);
 };
