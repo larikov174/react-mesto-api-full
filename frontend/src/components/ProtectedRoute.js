@@ -1,31 +1,29 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import useApiUser from '../utils/useApiUser';
 
 export default function ProtectedRoute({ children }) {
   const { checkToken } = useApiUser();
   const [user, setUser] = useState(null);
-  const mountedRef = useRef(true)
-  // const checkAuth = async () => {
-  //   const res = await checkToken();
-  //   return setUser(res);
-  // };
+  const [userChecked, setUserChecked] = useState(null);
 
-  const execute = useCallback(()=>checkToken()
-    .then(res=>{
-      if (!mountedRef.current) return null
-      return setUser(res)
-
-    }),[])
-
-    useEffect(()=>{
-      execute();
-      return (()=>{
-        mountedRef.current = false;
+  useEffect(()=>{
+    checkToken()
+      .then(res => {
+        setUser(res);
       })
-    }, [])
+      .finally(() => {
+        setUserChecked(true);
+      });
+  }, [])
 
-   return user ? children : <Navigate to="./login" replace />;
+  if (!userChecked) {
+    return (
+      <div>Check user login...</div>
+    )
+  }
+
+  return user ? children : <Navigate to="./login" replace />;
 }
