@@ -1,6 +1,3 @@
-/* eslint-disable no-unused-vars */
-
-/* eslint-disable no-console */
 import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import CurrentUserContext from '../contexts/CurrentUserContext';
@@ -194,30 +191,19 @@ function App() {
         if (res.login === 'ok') {
           getUserInfo()
             .then(data => {
-              if (data) {
-                setUser(data);
-              }
+              setUser(data);
             })
             .then(() => {
-              setUserChecked(true);
+              getCards()
+                .then(initCards => {
+                  setCards(initCards)
+                })
             })
             .finally(() => {
               navigate('/')
             })
         }
       })
-
-
-      // login({ password, email })
-      //   .then(() => {
-      //     loadUser();
-      //     getCards()
-      //       .then((cardData) => {
-      //         setCards(cardData);
-      //       }).then(() => {
-      //         navigate('/')
-      //       })
-      //   })
       .catch((error) => {
         errorShow(error);
       })
