@@ -63,7 +63,8 @@ module.exports.login = (req, res, next) => {
         maxAge: 6048000,
         httpOnly: true,
         sameSite: true,
-      })
+      });
+      res.status(200).send({ login: 'ok' })
         .end();
     })
     .catch(next);

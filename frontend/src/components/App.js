@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 
 /* eslint-disable no-console */
 import React, { useState, useEffect, useRef } from 'react';
@@ -42,10 +43,10 @@ function App() {
   }
 
 
-  const loadUser = async () => {
-    const res = await getUserInfo();
-    return res.json()
-  };
+  // const loadUser = async () => {
+  //   const res = await getUserInfo();
+  //   return res.json()
+  // };
   // const loadCards = async () => {
   //   const res = await getCards();
   //   return setCards(res)
@@ -189,35 +190,50 @@ function App() {
 
   const handleLogin = ({ password, email }) => {
     login({ password, email })
-      .then(() => {
-        loadUser();
-        getCards()
-          .then((cardData) => {
-            setCards(cardData);
-          }).then(() => {
-            navigate('/')
-          })
+      .then(res => {
+        if (res.login === 'ok') {
+          getUserInfo()
+            .then(data => {
+              if (data) {
+                setUser(data);
+              }
+            })
+            .then(() => {
+              setUserChecked(true);
+            })
+            .finally(() => {
+              navigate('/')
+            })
+        }
       })
+
+
+      // login({ password, email })
+      //   .then(() => {
+      //     loadUser();
+      //     getCards()
+      //       .then((cardData) => {
+      //         setCards(cardData);
+      //       }).then(() => {
+      //         navigate('/')
+      //       })
+      //   })
       .catch((error) => {
         errorShow(error);
       })
   }
 
 
-  const handleRegistration = async({ password, email }) => {
-    await register({ password, email })
-    try {
-      navigate('/login');
-    }
-    catch (error) {
-      errorShow(error)
-    }
-      // .then(() => {
-      //   setIsInfoTooltipState(true);
-      // })
-      // .catch(() => {
-      //   setIsInfoTooltipState(true);
-      // });
+  const handleRegistration = async ({ password, email }) => {
+    register({ password, email })
+      .then(() => {
+        navigate('/login');
+        // setIsInfoTooltipState(true);
+      })
+      .catch((error) => {
+        errorShow(error)
+        // setIsInfoTooltipState(true);
+      });
   };
 
   const handleLogout = () => {
