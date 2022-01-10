@@ -195,7 +195,7 @@ function App() {
           .then((cardData) => {
             setCards(cardData);
           }).then(() => {
-            navigate('/main')
+            navigate('/')
           })
       })
       .catch((error) => {
@@ -204,19 +204,23 @@ function App() {
   }
 
 
-  const handleRegistration = async ({ password, email }) => {
+  const handleRegistration = async({ password, email }) => {
     await register({ password, email })
-      .then(() => {
-        setIsInfoTooltipState(true);
-        navigate('/login');
-      })
-      .catch(() => {
-        setIsInfoTooltipState(true);
-      });
+    try {
+      navigate('/login');
+    }
+    catch (error) {
+      errorShow(error)
+    }
+      // .then(() => {
+      //   setIsInfoTooltipState(true);
+      // })
+      // .catch(() => {
+      //   setIsInfoTooltipState(true);
+      // });
   };
 
   const handleLogout = () => {
-    console.log('clicked');
     logout()
       .then(() => {
         setUser(null);

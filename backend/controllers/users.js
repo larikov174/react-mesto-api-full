@@ -46,12 +46,6 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.checkToken = (req, res) => {
-  // console.log(req.headers.origin);
-  // res.header('Access-Control-Allow-Origin', req.headers.origin);
-  // res.header('Access-Control-Allow-Credentials', true);
-  // res.header('Access-Control-Allow-Methods', 'GET');
-  // res.header('Access-Control-Allow-Headers', 'access-control-request-headers');
-  // res.set('location', `${req.headers.origin}/main`);
   res.status(200).send({ token: 'ok' })
     .end();
 };
@@ -82,7 +76,7 @@ module.exports.logout = (req, res) => {
     httpOnly: true,
     sameSite: true,
   });
-  return res.status(200).send('сессия закрыта');
+  return res.status(200).send({ status: 'сессия закрыта' });
 };
 
 module.exports.updateUserData = (req, res, next) => {

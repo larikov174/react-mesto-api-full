@@ -1,14 +1,16 @@
+/* eslint-disable no-console */
 import baseUrl from './const';
 
 export default function useAuth() {
 
   const handleResponse = (res) => {
-    const answer = res.ok ? res.text() : Promise.reject(`Ошибка: ${res.status}`);
+    const answer = res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
     return answer;
   };
+
   return {
     register({ password, email }) {
-      fetch(`${baseUrl}register`, {
+      return fetch(`${baseUrl}register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -21,7 +23,7 @@ export default function useAuth() {
     },
 
     login({ password, email }) {
-      fetch(`${baseUrl}login`, {
+      return fetch(`${baseUrl}login`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -35,7 +37,7 @@ export default function useAuth() {
     },
 
     logout() {
-      fetch(`${baseUrl}logout`, {
+      return fetch(`${baseUrl}logout`, {
         method: 'GET',
         credentials: 'include',
       }).then(handleResponse);

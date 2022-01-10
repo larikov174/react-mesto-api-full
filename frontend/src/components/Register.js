@@ -16,33 +16,31 @@ export default function Register({ onRegistration }) {
   };
 
   return (
-    <>
-      <AuthForm className="login" onSubmit={handleRegistration}>
-        <h2 className="login__title">Регистрация</h2>
-        <input
-          className="login__input"
-          onChange={onEmailChange}
-          name="email"
-          type="email"
-          title="email"
-          value={email || ''}
-          placeholder="Email"
-          required
-        />
-        <input
-          className="login__input"
-          onChange={onPassChange}
-          name="password"
-          type="password"
-          title="Пароль"
-          value={password || ''}
-          placeholder="Пароль"
-          required
-        />
-        <button className="login__button" type="submit">
-          {buttonTitle}
-        </button>
-      </AuthForm>
-    </>
+    <AuthForm className="login" onSubmit={handleRegistration}>
+      <h2 className="login__title">Регистрация</h2>
+      <input
+        className="login__input"
+        onChange={onEmailChange}
+        name="email"
+        type="email"
+        title="email"
+        value={email || ''}
+        placeholder="Email"
+        required
+      />
+      <input
+        className="login__input"
+        onChange={onPassChange}
+        name="password"
+        type="password"
+        title="Пароль"
+        value={password || ''}
+        placeholder="Пароль"
+        required
+      />
+      <button className="login__button" type="submit">
+        {buttonTitle}
+      </button>
+    </AuthForm>
   );
 }

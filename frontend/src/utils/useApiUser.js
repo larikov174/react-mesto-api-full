@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import baseUrl from './const';
 
-export default function useHandleUser() {
+export default function useApiUser() {
 
   const handleResponse = (res) => {
     const answer = res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
