@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 import React, { useContext } from 'react';
 import Card from './Card';
@@ -14,11 +13,10 @@ function Main({
   onCardDelete,
 }) {
   const { user } = useContext(CurrentUserContext);
-
+  console.log(user);
   return (
     <>
-    <div>Main is load here</div>
-      {/* <main>
+      <main>
         <section className="profile">
           <div className="profile__avatar-overlay" onClick={onEditAvatar} role="presentation">
             <img className="profile__avatar" src={user.avatar} alt="Аватар" />
@@ -45,7 +43,7 @@ function Main({
             ))}
           </ul>
         </section>
-      </main> */}
+      </main>
     </>
   );
 }

@@ -1,13 +1,12 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-
+import CurrentUserContext from '../contexts/CurrentUserContext';
 // import useApiUser from '../utils/useApiUser';
-import useFindUser from '../utils/useFindUser';
 
 export default function ProtectedRoute({ children }) {
-  const {user} = useFindUser();
+  const { user } = useContext(CurrentUserContext);
   // const { getUserInfo } = useApiUser();
   // const [user, setUser] = useState(null);
   // const [userChecked, setUserChecked] = useState(null);
@@ -20,7 +19,6 @@ export default function ProtectedRoute({ children }) {
   //     .finally(() => {
   //       setUserChecked(true);
   //     });
-
   //   return (() => setUserChecked(null))
   // }, [])
 
@@ -29,6 +27,7 @@ export default function ProtectedRoute({ children }) {
   //     <div>Check user login...</div>
   //   )
   // }
+  console.log(user);
 
-  return user ? children : <Navigate to="./login" replace />;
+  return user ? children : <Navigate to="./login" replace />
 }

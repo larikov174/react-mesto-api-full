@@ -1,11 +1,10 @@
-/* eslint-disable no-unused-vars */
+
 /* eslint-disable no-console */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import ProtectedRoute from './ProtectedRoute';
 import useAuth from '../utils/useAuth';
-// import useFindUser from '../utils/useFindUser';
 import useApiUser from '../utils/useApiUser';
 import useApiCard from '../utils/useApiCard';
 import Header from './Header';
@@ -31,13 +30,21 @@ function App() {
   const [cards, setCards] = useState([]);
   const errorShow = (err) => console.error(err);
   const { login, register, logout } = useAuth();
-  const { getUserInfo, setUserInfo, uploadAvatar } = useApiUser();
+  const { checkToken, getUserInfo, setUserInfo, uploadAvatar } = useApiUser();
   const { getCards, postCard, removeCard, setLike, removeLike } = useApiCard();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [userChecked, setUserChecked] = useState(null);
+  const start = useRef(null)
+
+  const onLoadCheck = () => {
+    checkToken().then((res) => start.current = res)
+  }
+
+
   const loadUser = async () => {
     const res = await getUserInfo();
-    return console.log(res)
+    return res.json()
   };
   // const loadCards = async () => {
   //   const res = await getCards();
@@ -54,6 +61,32 @@ function App() {
   };
 
   useEffect(() => {
+    if (start === null) {
+      onLoadCheck();
+    }
+
+    if (start !== null) {
+      getUserInfo()
+        .then(res => {
+          if(res){
+            setUser(res);
+          }
+        })
+        .then(()=>{
+          setUserChecked(true);
+        })
+        .finally(() => {
+          navigate('/')
+        });
+    }
+
+
+    if (!userChecked) {
+      return (
+        <div>Check user login...</div>
+      )
+    }
+
 
     // loadUser()
     //   .then(() => {
@@ -87,6 +120,7 @@ function App() {
       document.removeEventListener('keydown', escHandler);
     };
   }, []);
+
 
   const openEditProfilePopup = () => {
     setIsEditProfilePopupState(true);
