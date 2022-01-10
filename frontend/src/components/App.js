@@ -39,16 +39,6 @@ function App() {
     checkToken().then((res) => start.current = res)
   }
 
-
-  // const loadUser = async () => {
-  //   const res = await getUserInfo();
-  //   return res.json()
-  // };
-  // const loadCards = async () => {
-  //   const res = await getCards();
-  //   return setCards(res)
-  // }
-
   const closeAllPopups = () => {
     setIsEditProfilePopupState(false);
     setIsAddPlacePopupState(false);
@@ -90,32 +80,6 @@ function App() {
         <div>Check user login...</div>
       )
     }
-
-
-    // loadUser()
-    //   .then(() => {
-    //     localStorage.setItem('logged', true);
-    //     loadCards()
-    //   })
-    //   .then(() => {
-    //     navigate('/main')
-    //   })
-    //   .catch((error) => {
-    //     errorShow(error);
-    //   })
-
-    // loadUser()
-    // .then(() => {
-    //   getCards()
-    //   .then((cardData) => {
-    //       setCards(cardData);
-    //       }).then(() => {
-    //         navigate('/main')
-    //       })
-    //   })
-    //   .catch((error) => {
-    //     errorShow(error);
-    //   })
 
     const escHandler = (evt) => evt.key === 'Escape' && closeAllPopups();
     document.addEventListener('keydown', escHandler);

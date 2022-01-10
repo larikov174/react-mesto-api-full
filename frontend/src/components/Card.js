@@ -11,7 +11,6 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   const cardDeleteButtonClassName = `card__delete-button ${
     isOwn ? 'card__delete-button_visible' : 'card__delete-button_hidden'
   }`;
-  console.log(card);
 
   return (
     <li className="card">
