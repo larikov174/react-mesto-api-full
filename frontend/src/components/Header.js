@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import CurrentUserContext from '../contexts/CurrentUserContext';
@@ -12,8 +11,8 @@ export default function Header({ onLogout }) {
   const email = user ? user.email : '';
 
   const handleLogout = () => {
-    setMenuOpened(false);
     onLogout();
+    setMenuOpened(false);
   };
   const renderBurger = () => setMenuOpened(!menuOpened);
   const renderLink = () => {
@@ -44,25 +43,26 @@ export default function Header({ onLogout }) {
   return (
     <>
       <div className={`burger ${menuOpened ? 'burger_type_active' : ''}`}>
-        <p className="burger__text">{email}&nbsp;</p>
-        <Link className="burger__link" to={linkDest} onClick={()=>user ? handleLogout : ''}>
+        <p className="burger__text">{user ? email : ''}&nbsp;</p>
+        <Link className="burger__link" to={linkDest}
+          onClick={() => location === '/' ? handleLogout() : ''}>
           {linkTitle}
         </Link>
       </div>
       <header className="header">
         <div className="header__logo" title="Mesto" />
         <div className="header__actions">
-          <p className="header__text">{email}&nbsp;</p>
+          <p className="header__text">{user ? email : ''}&nbsp;</p>
           <Link
             to={linkDest}
             className={`header__link ${user && 'header__link_idle-on-mobile'}`}
-            onClick={()=>user ? handleLogout : ''}
+            onClick={() => location === '/' ? handleLogout() : '' }
           >
             {linkTitle}
           </Link>
           <button
             className={`${user ? 'header__burger'
-            : 'header__burger_idle'} ${menuOpened ? 'header__burger_type_close' : ''}
+              : 'header__burger_idle'} ${menuOpened ? 'header__burger_type_close' : ''}
             `}
             type="button"
             onClick={renderBurger}

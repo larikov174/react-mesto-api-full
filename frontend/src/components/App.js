@@ -68,11 +68,11 @@ function App() {
     if (start !== null) {
       getUserInfo()
         .then(res => {
-          if(res){
+          if (res) {
             setUser(res);
           }
         })
-        .then(()=>{
+        .then(() => {
           setUserChecked(true);
         })
         .finally(() => {
@@ -215,15 +215,15 @@ function App() {
       });
   };
 
-  const handleLogout = async () => {
-    await logout();
-    try {
-      // setUser(null);
-      navigate('/login');
-    }
-    catch (error) {
-      errorShow(error);
-    }
+  const handleLogout = () => {
+    console.log('clicked');
+    logout()
+      .then(() => {
+        setUser(null);
+      })
+      .catch((error) => {
+        errorShow(error);
+      });
   }
 
   return (
