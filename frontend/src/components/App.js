@@ -71,6 +71,12 @@ function App() {
           }
         })
         .then(() => {
+          getCards()
+            .then(initCards => {
+              setCards(initCards)
+            })
+        })
+        .then(() => {
           setUserChecked(true);
         })
         .finally(() => {
