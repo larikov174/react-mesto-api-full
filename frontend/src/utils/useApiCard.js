@@ -1,6 +1,6 @@
 import baseUrl from './const';
 
-export default function useHandleCards() {
+export default function useApiCard() {
   const handleResponse = (res) => {
     const answer = res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
     return answer;

@@ -1,15 +1,15 @@
 import baseUrl from './const';
 
-function useAuth() {
+export default function useAuth() {
 
   const handleResponse = (res) => {
-    const answer = res.ok ? res.text() : Promise.reject(`Ошибка: ${res.status}`);
+    const answer = res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
     return answer;
   };
 
   return {
-    signUp({ password, email }) {
-      return fetch(`${baseUrl}signup`, {
+    register({ password, email }) {
+      return fetch(`${baseUrl}register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -21,8 +21,8 @@ function useAuth() {
       }).then(handleResponse);
     },
 
-    signIn({ password, email }) {
-      return fetch(`${baseUrl}signin`, {
+    login({ password, email }) {
+      return fetch(`${baseUrl}login`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -35,13 +35,12 @@ function useAuth() {
       }).then(handleResponse);
     },
 
-    signOut() {
-      return fetch(`${baseUrl}signout`, {
+    logout() {
+      return fetch(`${baseUrl}logout`, {
         method: 'GET',
         credentials: 'include',
       }).then(handleResponse);
-    },
-  };
+    }
+  }
 }
 
-export default useAuth;

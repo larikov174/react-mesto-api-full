@@ -13,7 +13,7 @@ module.exports.getUsers = (req, res, next) => {
 
 module.exports.getUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(new CustomError(404, 'Данный пользователь не найден'))
+    .orFail(new CustomError(401, 'Вы не авторизованы в системе'))
     .then((user) => res.status(200).send(user))
     .catch(next);
 };
@@ -45,6 +45,11 @@ module.exports.createUser = (req, res, next) => {
   });
 };
 
+module.exports.checkToken = (req, res) => {
+  res.status(200).send({ token: 'ok' })
+    .end();
+};
+
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
@@ -58,7 +63,8 @@ module.exports.login = (req, res, next) => {
         maxAge: 6048000,
         httpOnly: true,
         sameSite: true,
-      })
+      });
+      res.status(200).send({ login: 'ok' })
         .end();
     })
     .catch(next);
@@ -71,7 +77,7 @@ module.exports.logout = (req, res) => {
     httpOnly: true,
     sameSite: true,
   });
-  return res.status(200).send('сессия закрыта');
+  return res.status(200).send({ status: 'сессия закрыта' });
 };
 
 module.exports.updateUserData = (req, res, next) => {

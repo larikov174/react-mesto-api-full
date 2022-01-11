@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function InfoTooltip({ isOpen, onClose, noteType }) {
+export default function InfoTooltip({ isOpen, onClose }) {
   const titles = {
     pass: 'Вы успешно зарегистрировались!',
     fail: 'Что-то пошло не так! Попробуйте ещё раз.',
@@ -10,7 +10,7 @@ export default function InfoTooltip({ isOpen, onClose, noteType }) {
   return (
     <div
       id="infoTooltip"
-      className={`popup ${isOpen ? 'popup_opened' : ''}`}
+      className={`popup ${isOpen.visible ? 'popup_opened' : ''}`}
       role="presentation"
       onClick={handleOverlayClick}
     >
@@ -22,9 +22,9 @@ export default function InfoTooltip({ isOpen, onClose, noteType }) {
             name="closePopup"
             onClick={onClose}
           />
-          <div className={`popup__toolTip-image ${!noteType && 'popup__toolTip-image_fail'}`} />
+          <div className={`popup__toolTip-image ${!isOpen.queryApproved && 'popup__toolTip-image_fail'}`} />
           <h2 className="popup__title popup__toolTip-title">
-            {noteType ? titles.pass : titles.fail}
+            {isOpen.queryApproved ? titles.pass : titles.fail}
           </h2>
         </div>
       </div>

@@ -6,7 +6,7 @@ export default function AuthForm({ children, onSubmit }) {
   const renderSignInLink = (
     <div className="login__actions">
       <p className="login__text">Уже зарегистрированы?&nbsp;</p>
-      <Link className="login__link" to="/sign-in">
+      <Link className="login__link" to="/login">
         Войти
       </Link>
     </div>
@@ -15,7 +15,7 @@ export default function AuthForm({ children, onSubmit }) {
   return (
     <form className="login" onSubmit={onSubmit}>
       {children}
-      {location === '/sign-up' && renderSignInLink}
+      {location === '/register' && renderSignInLink}
     </form>
   );
 }
