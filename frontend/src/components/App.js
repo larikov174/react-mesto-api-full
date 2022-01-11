@@ -119,6 +119,12 @@ function App() {
   const handleUpdateUser = async (newInfo) => {
     await setUserInfo(newInfo)
       .then(() => {
+        getUserInfo()
+          .then(data => {
+            setUser(data);
+          })
+      })
+      .then(() => {
         closeAllPopups();
       })
       .catch(errorShow);
@@ -126,11 +132,17 @@ function App() {
 
   const handleUpdateAvatar = async ({ avatar }) => {
     await uploadAvatar(avatar)
-      .then(() => {
-        closeAllPopups();
-      })
-      .catch(errorShow);
-  };
+    .then(() => {
+      getUserInfo()
+        .then(data => {
+          setUser(data);
+        })
+    })
+    .then(() => {
+      closeAllPopups();
+    })
+    .catch(errorShow);
+};
 
   const handleAddPlaceSubmit = async (card) => {
     await postCard(card)

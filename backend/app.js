@@ -19,7 +19,8 @@ const cards = require('./routes/cards');
 const users = require('./routes/users');
 
 const { PORT = 3000 } = process.env;
-const db = 'mongodb://localhost:27017/mestodb';
+// const db = 'mongodb://localhost:27017/mestodb';
+const db = 'mongodb+srv://larikov174:2694432@cluster0.mwtfk.mongodb.net/mestodb';
 
 mongoose
   .connect(db, {
