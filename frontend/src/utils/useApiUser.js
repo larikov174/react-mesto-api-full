@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import baseUrl from './const';
 
 export default function useApiUser() {
@@ -20,7 +19,7 @@ export default function useApiUser() {
       return fetch(`${baseUrl}check`, {
         method: 'GET',
         credentials: 'include',
-      }).then(res=>res.ok);
+      }).then(res => res.ok);
     },
 
     setUserInfo(data) {
