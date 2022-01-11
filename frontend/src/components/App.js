@@ -23,7 +23,7 @@ function App() {
   const [isDeletePlacePopupState, setIsDeletePlacePopupState] = useState(false);
   const [isEditAvatarPopupState, setIsEditAvatarPopupState] = useState(false);
   const [isImgPopupState, setIsImgPopupState] = useState(false);
-  const [isInfoTooltipState, setIsInfoTooltipState] = useState(false);
+  const [isInfoTooltipState, setIsInfoTooltipState] = useState({visible: false, queryApproved: false});
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
   const errorShow = (err) => console.error(err);
@@ -196,11 +196,11 @@ function App() {
     register({ password, email })
       .then(() => {
         navigate('/login');
-        // setIsInfoTooltipState(true);
+        setIsInfoTooltipState({visible: true, queryApproved: true});
       })
       .catch((error) => {
         errorShow(error)
-        // setIsInfoTooltipState(true);
+        setIsInfoTooltipState({visible: true, queryApproved: false});
       });
   };
 
