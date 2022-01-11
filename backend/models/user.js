@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const isEmail = require('validator/lib/isEmail');
 const CustomError = require('../utils/CustomError');
+const { regExp } = require('../utils/const');
 
 const userSchema = new mongoose.Schema(
   {
@@ -39,7 +40,7 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       validate: {
         validator(v) {
-          return /^(https?:\/\/(www\.)?)[\w-]+\.[\w./():,-]+#?$/.test(v);
+          return regExp.test(v);
         },
         message: 'Указана некорректная ссылка',
       },

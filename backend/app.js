@@ -5,8 +5,14 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const { celebrate, Joi, errors } = require('celebrate');
-const { createUser, login, logout } = require('./controllers/users');
+const {
+  createUser,
+  login,
+  logout,
+  checkToken,
+} = require('./controllers/users');
 const CustomError = require('./utils/CustomError');
+const { regExp, db } = require('./utils/const');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
 const cors = require('./middlewares/cors');
@@ -14,7 +20,6 @@ const cards = require('./routes/cards');
 const users = require('./routes/users');
 
 const { PORT = 3000 } = process.env;
-const db = 'mongodb://localhost:27017/mestodb';
 
 mongoose
   .connect(db, {
@@ -35,7 +40,7 @@ app.use(requestLogger);
 app.use(cors);
 
 app.post(
-  '/signin',
+  '/login',
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
@@ -46,14 +51,14 @@ app.post(
 );
 
 app.post(
-  '/signup',
+  '/register',
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
       password: Joi.string().required().min(3),
       name: Joi.string().min(2).max(40),
       about: Joi.string().min(2).max(200),
-      avatar: Joi.string().pattern(/^(https?:\/\/(www\.)?)[\w-]+\.[\w./():,-]+#?$/),
+      avatar: Joi.string().pattern(regExp),
     }),
   }),
   createUser,
@@ -66,9 +71,10 @@ app.get('/crash-test', () => {
 });
 
 app.use(auth);
+app.use('/check', checkToken);
 app.use('/cards', cards);
 app.use('/users', users);
-app.get('/signout', logout);
+app.get('/logout', logout);
 
 app.use(errorLogger);
 app.use(errors());

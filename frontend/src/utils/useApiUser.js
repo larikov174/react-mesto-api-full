@@ -1,6 +1,6 @@
 import baseUrl from './const';
 
-export default function useHandleUser() {
+export default function useApiUser() {
 
   const handleResponse = (res) => {
     const answer = res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
@@ -8,6 +8,20 @@ export default function useHandleUser() {
   };
 
   return {
+    getUserInfo() {
+      return fetch(`${baseUrl}users/me`, {
+        method: 'GET',
+        credentials: 'include',
+      }).then(handleResponse);
+    },
+
+    checkToken() {
+      return fetch(`${baseUrl}check`, {
+        method: 'GET',
+        credentials: 'include',
+      }).then(res => res.ok);
+    },
+
     setUserInfo(data) {
       return fetch(`${baseUrl}users/me`, {
         method: 'PATCH',

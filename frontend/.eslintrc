@@ -14,7 +14,7 @@
     "max-len": [
       "error",
       {
-        "code": 100
+        "code": 125
       }
     ],
     "jsx-a11y/control-has-associated-label": [
