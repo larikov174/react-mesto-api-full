@@ -12,6 +12,7 @@ const {
   checkToken,
 } = require('./controllers/users');
 const CustomError = require('./utils/CustomError');
+const { regExp, db } = require('./utils/const');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
 const cors = require('./middlewares/cors');
@@ -19,8 +20,6 @@ const cards = require('./routes/cards');
 const users = require('./routes/users');
 
 const { PORT = 3000 } = process.env;
-// const db = 'mongodb://localhost:27017/mestodb';
-const db = 'mongodb+srv://larikov174:2694432@cluster0.mwtfk.mongodb.net/mestodb';
 
 mongoose
   .connect(db, {
@@ -59,7 +58,7 @@ app.post(
       password: Joi.string().required().min(3),
       name: Joi.string().min(2).max(40),
       about: Joi.string().min(2).max(200),
-      avatar: Joi.string().pattern(/^(https?:\/\/(www\.)?)[\w-]+\.[\w./():,-]+#?$/),
+      avatar: Joi.string().pattern(regExp),
     }),
   }),
   createUser,
