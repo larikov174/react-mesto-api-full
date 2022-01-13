@@ -5,7 +5,7 @@ import CurrentUserContext from '../contexts/CurrentUserContext';
 export default function Header({ onLogout }) {
   const location = useLocation().pathname;
   const { user } = useContext(CurrentUserContext);
-  const [linkDest, setLinkDest] = useState('/register');
+  const [linkDest, setLinkDest] = useState('/signup');
   const [linkTitle, setLinkTitle] = useState('Регистрация');
   const [menuOpened, setMenuOpened] = useState(false);
   const email = user ? user.email : '';
@@ -17,21 +17,21 @@ export default function Header({ onLogout }) {
   const renderBurger = () => setMenuOpened(!menuOpened);
   const renderLink = () => {
     switch (location) {
-      case '/login':
+      case '/signin':
         setLinkTitle('Регистрация');
-        setLinkDest('/register');
+        setLinkDest('/signup');
         break;
-      case '/register':
+      case '/signup':
         setLinkTitle('Войти');
-        setLinkDest('/login');
+        setLinkDest('/signin');
         break;
       case '/':
         setLinkTitle('Выйти');
-        setLinkDest('/login');
+        setLinkDest('/signin');
         break;
       default:
         setLinkTitle('Регистрация');
-        setLinkDest('/register');
+        setLinkDest('/signup');
         break;
     }
   };

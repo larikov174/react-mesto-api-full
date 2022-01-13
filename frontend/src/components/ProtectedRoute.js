@@ -4,5 +4,5 @@ import CurrentUserContext from '../contexts/CurrentUserContext';
 
 export default function ProtectedRoute({ children }) {
   const { user } = useContext(CurrentUserContext);
-  return user ? children : <Navigate to="./login" replace />
+  return user ? children : <Navigate to="./signin" replace />
 }
