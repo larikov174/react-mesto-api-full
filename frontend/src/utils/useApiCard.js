@@ -36,14 +36,14 @@ export default function useApiCard() {
     },
 
     setLike(card) {
-      return fetch(`${baseUrl}cards/likes/${card._id}`, {
+      return fetch(`${baseUrl}cards/${card._id}/likes`, {
         method: 'PUT',
         credentials: 'include',
       }).then(handleResponse);
     },
 
     removeLike(card) {
-      return fetch(`${baseUrl}cards/likes/${card._id}`, {
+      return fetch(`${baseUrl}cards/${card._id}/likes`, {
         method: 'DELETE',
         credentials: 'include',
       }).then(handleResponse);
