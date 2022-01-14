@@ -8,18 +8,25 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
   const [buttonTitle, setButtonTitle] = useState('Сохранить');
   const [name, setName] = useState(null);
   const [about, setAbout] = useState(null);
+  const errorShow = (err) => console.error(err);
   const handleNameChange = (e) => setName(e.target.value);
   const handleDescrChange = (e) => setAbout(e.target.value);
   const handleSubmit = (e) => {
     e.preventDefault();
     setButtonTitle('Обработка...');
-    onUpdateUser({
-      name,
-      about,
-    })
-      .then(() => setButtonTitle('Сохранить'))
-      .catch(() => setButtonTitle('Ошибка!'));
-  };
+    try {
+      onUpdateUser({
+        name,
+        about,
+      })
+    }
+    catch (err) {
+      errorShow(err)
+    }
+    finally {
+      setButtonTitle('Сохранить')
+    }
+  }
   useEffect(() => {
     if (user !== null) {
       setName(user.name);
@@ -65,5 +72,6 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
     </PopupWithForm>
   );
 }
+
 
 export default EditProfilePopup;

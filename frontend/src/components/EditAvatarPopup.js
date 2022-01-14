@@ -1,22 +1,27 @@
-import React from 'react';
+import React, {useState, useRef} from 'react';
 import PopupWithForm from './PopupWithForm';
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
-  const [buttonTitle, setButtonTitle] = React.useState('Сохранить');
-  const link = React.useRef();
-  const resetInput = () => {
-    link.current.value = '';
-    setButtonTitle('Сохранить');
-  };
+  const [buttonTitle, setButtonTitle] = useState('Сохранить');
+  const errorShow = (err) => console.error(err);
+  const link = useRef();
+  const resetInput = () => link.current.value = '';
   const handleSubmit = (e) => {
     e.preventDefault();
     setButtonTitle('Обработка...');
-    onUpdateAvatar({
-      avatar: link.current.value,
-    })
-      .then(() => resetInput())
-      .catch(() => setButtonTitle('Ошибка!'));
-  };
+    try {
+      onUpdateAvatar({
+        avatar: link.current.value,
+      })
+    }
+    catch (err) {
+      errorShow(err)
+    }
+    finally {
+      setButtonTitle('Сохранить')
+      resetInput()
+    }
+  }
 
   return (
     <PopupWithForm
