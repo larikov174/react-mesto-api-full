@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const isEmail = require('validator/lib/isEmail');
+const validator = require('validator');
 const CustomError = require('../utils/CustomError');
-const { regExp } = require('../utils/const');
 
 const userSchema = new mongoose.Schema(
   {
@@ -40,9 +40,8 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       validate: {
         validator(v) {
-          return regExp.test(v);
+          return validator.isURL(v);
         },
-        message: 'Указана некорректная ссылка',
       },
       default:
         'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
