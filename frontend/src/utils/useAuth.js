@@ -8,8 +8,8 @@ export default function useAuth() {
   };
 
   return {
-    register({ password, email }) {
-      return fetch(`${baseUrl}register`, {
+    signup({ password, email }) {
+      return fetch(`${baseUrl}signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -21,8 +21,8 @@ export default function useAuth() {
       }).then(handleResponse);
     },
 
-    login({ password, email }) {
-      return fetch(`${baseUrl}login`, {
+    signin({ password, email }) {
+      return fetch(`${baseUrl}signin`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -35,8 +35,8 @@ export default function useAuth() {
       }).then(handleResponse);
     },
 
-    logout() {
-      return fetch(`${baseUrl}logout`, {
+    signout() {
+      return fetch(`${baseUrl}signout`, {
         method: 'GET',
         credentials: 'include',
       }).then(handleResponse);

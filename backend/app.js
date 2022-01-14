@@ -40,7 +40,7 @@ app.use(requestLogger);
 app.use(cors);
 
 app.post(
-  '/login',
+  '/signin',
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
@@ -51,7 +51,7 @@ app.post(
 );
 
 app.post(
-  '/register',
+  '/signup',
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
@@ -74,7 +74,7 @@ app.use(auth);
 app.use('/check', checkToken);
 app.use('/cards', cards);
 app.use('/users', users);
-app.get('/logout', logout);
+app.get('/signout', logout);
 
 app.use(errorLogger);
 app.use(errors());

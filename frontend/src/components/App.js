@@ -27,7 +27,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
   const errorShow = (err) => console.error(err);
-  const { login, register, logout } = useAuth();
+  const { signup, signin, signout } = useAuth();
   const { checkToken, getUserInfo, setUserInfo, uploadAvatar } = useApiUser();
   const { getCards, postCard, removeCard, setLike, removeLike } = useApiCard();
   const navigate = useNavigate();
@@ -168,7 +168,7 @@ function App() {
   };
 
   const handleLogin = ({ password, email }) => {
-    login({ password, email })
+    signin({ password, email })
       .then(res => {
         if (res.login === 'ok') {
           getUserInfo()
@@ -188,14 +188,15 @@ function App() {
       })
       .catch((error) => {
         errorShow(error);
+        setIsInfoTooltipState({visible: true, queryApproved: false});
       })
   }
 
 
   const handleRegistration = async ({ password, email }) => {
-    register({ password, email })
+    signup({ password, email })
       .then(() => {
-        navigate('/login');
+        navigate('/signin');
         setIsInfoTooltipState({visible: true, queryApproved: true});
       })
       .catch((error) => {
@@ -205,7 +206,7 @@ function App() {
   };
 
   const handleLogout = () => {
-    logout()
+    signout()
       .then(() => {
         setUser(null);
       })
@@ -220,8 +221,8 @@ function App() {
         <CurrentUserContext.Provider value={{ user }}>
           <Header onLogout={handleLogout} />
           <Routes>
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route path="/register" element={<Register onRegistration={handleRegistration} />} />
+            <Route path="/signin" element={<Login onLogin={handleLogin} />} />
+            <Route path="/signup" element={<Register onRegistration={handleRegistration} />} />
             <Route
               path="/*"
               element={

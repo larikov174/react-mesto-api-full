@@ -1,22 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import AuthForm from './AuthForm';
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [buttonTitle, setButtonTitle] = useState('Войти');
+  const errorShow = (err) => console.error(err);
+  const buttonRef = useRef();
   const onEmailChange = (e) => setEmail(e.target.value);
   const onPassChange = (e) => setPassword(e.target.value);
   const handleLogin = (e) => {
     e.preventDefault();
-    onLogin({ password, email })
+    setButtonTitle('Обработка...');
     try {
-      setButtonTitle('Обработка...');
+      onLogin({ password, email })
     }
     catch (err) {
-      setButtonTitle('Ошибка!')
+      errorShow(err)
+    }
+    finally {
+      setButtonTitle('Войти');
     }
   };
+
+  useEffect(() =>{
+    if(email && password){
+      buttonRef.current.disabled = false;
+    }else {
+      buttonRef.current.disabled = true;
+    }
+  })
 
   return (
     <AuthForm className="login" onSubmit={handleLogin}>
@@ -41,7 +54,7 @@ export default function Login({ onLogin }) {
         placeholder="Пароль"
         required
       />
-      <button className="login__button" type="submit">
+      <button ref={buttonRef} className="login__button" type="submit">
         {buttonTitle}
       </button>
     </AuthForm>

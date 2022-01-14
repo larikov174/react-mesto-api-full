@@ -5,20 +5,27 @@ function EditAvatarPopup({ isOpen, onClose, onAddPlace }) {
   const [name, setName] = useState('');
   const [link, setLink] = useState('');
   const [buttonTitle, setButtonTitle] = useState('Создать');
+  const errorShow = (err) => console.error(err);
   const handleNameChange = (e) => setName(e.target.value);
   const handleLinkChange = (e) => setLink(e.target.value);
   const resetInput = () => {
     setName('');
     setLink('');
-    setButtonTitle('Создать');
   };
   const handleSubmit = (e) => {
     e.preventDefault();
     setButtonTitle('Обработка...');
-    onAddPlace({ name, link })
-      .then(() => resetInput())
-      .catch(() => setButtonTitle('Ошибка!'));
-  };
+    try {
+      onAddPlace({ name, link })
+    }
+    catch (err) {
+      errorShow(err)
+    }
+    finally {
+      setButtonTitle('Сохранить')
+      resetInput()
+    }
+  }
 
   return (
     <PopupWithForm
