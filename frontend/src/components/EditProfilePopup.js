@@ -1,28 +1,31 @@
+/* eslint-disable no-console */
 import React, { useState, useContext, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
-  const currentUser = useContext(CurrentUserContext);
+  const { user } = useContext(CurrentUserContext);
   const [buttonTitle, setButtonTitle] = useState('Сохранить');
-  const [name, setName] = useState(currentUser.name);
-  const [description, setDescription] = useState(currentUser.about);
+  const [name, setName] = useState(null);
+  const [about, setAbout] = useState(null);
   const handleNameChange = (e) => setName(e.target.value);
-  const handleDescrChange = (e) => setDescription(e.target.value);
+  const handleDescrChange = (e) => setAbout(e.target.value);
   const handleSubmit = (e) => {
     e.preventDefault();
     setButtonTitle('Обработка...');
     onUpdateUser({
       name,
-      about: description,
+      about,
     })
       .then(() => setButtonTitle('Сохранить'))
       .catch(() => setButtonTitle('Ошибка!'));
   };
   useEffect(() => {
-    setName(currentUser.name);
-    setDescription(currentUser.about);
-  }, [currentUser, isOpen]);
+    if (user !== null) {
+      setName(user.name);
+      setAbout(user.about);
+    }
+  }, [user, isOpen]);
 
   return (
     <PopupWithForm
@@ -50,7 +53,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
         id="inputProfileWork"
         className="popup__input"
         name="work"
-        value={description || ''}
+        value={about || ''}
         onChange={handleDescrChange}
         type="text"
         title="вид деятельности"
