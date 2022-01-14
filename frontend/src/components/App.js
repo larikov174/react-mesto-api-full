@@ -188,6 +188,7 @@ function App() {
       })
       .catch((error) => {
         errorShow(error);
+        setIsInfoTooltipState({visible: true, queryApproved: false});
       })
   }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useState } from 'react';
 import AuthForm from './AuthForm';
 
@@ -5,16 +6,20 @@ export default function Login({ onLogin }) {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [buttonTitle, setButtonTitle] = useState('Войти');
+  const errorShow = (err) => console.error(err);
   const onEmailChange = (e) => setEmail(e.target.value);
   const onPassChange = (e) => setPassword(e.target.value);
   const handleLogin = (e) => {
     e.preventDefault();
-    onLogin({ password, email })
+    setButtonTitle('Обработка...');
     try {
-      setButtonTitle('Обработка...');
+      onLogin({ password, email })
     }
     catch (err) {
-      setButtonTitle('Ошибка!')
+      errorShow(err)
+    }
+    finally {
+      setButtonTitle('Войти');
     }
   };
 
