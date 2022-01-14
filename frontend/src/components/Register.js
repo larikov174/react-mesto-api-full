@@ -5,14 +5,22 @@ export default function Register({ onRegistration }) {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [buttonTitle, setButtonTitle] = useState('Зарегистрироваться');
-
+  const errorShow = (err) => console.error(err);
   const onEmailChange = (e) => setEmail(e.target.value);
   const onPassChange = (e) => setPassword(e.target.value);
 
   const handleRegistration = (e) => {
     e.preventDefault();
     setButtonTitle('Обработка...');
-    onRegistration({ password, email })
+    try {
+      onRegistration({ password, email })
+    }
+    catch (err) {
+      errorShow(err)
+    }
+    finally {
+      setButtonTitle('Зарегистрироваться');
+    }
   };
 
   return (

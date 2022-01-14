@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useState, useRef, useEffect } from 'react';
 import AuthForm from './AuthForm';
 
