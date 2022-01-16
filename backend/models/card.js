@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const regExp = require('../utils/const');
+const isURL = require('validator/lib/isURL');
 
 const cardSchema = new mongoose.Schema(
   {
@@ -15,7 +15,7 @@ const cardSchema = new mongoose.Schema(
       required: true,
       validate: {
         validator(v) {
-          return regExp.test(v);
+          return isURL(v);
         },
       },
     },
