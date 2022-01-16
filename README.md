@@ -6,9 +6,9 @@
 ---
 
 ## Использованные технологии:
-**Frontend:** React & CRA, HTML, CSS, Figma & Pixel Perfect.
-**Backend:** Express & Node.js, MongoDB, JWT аутентификация (с хронением в куках).
-**Сервер:** развернут в Яндекс Облаке, ВМ на Ubuntu, прокси через nginx, оформлен SSL сертификат. 
+- **Frontend:** React & CRA, HTML, CSS, Figma & Pixel Perfect.
+- **Backend:** Express & Node.js, MongoDB, JWT аутентификация (с хронением в куках).
+- **Сервер:** развернут в Яндекс Облаке, ВМ на Ubuntu, прокси через nginx, оформлен SSL сертификат. 
 
 ## Публичный ip **51.250.16.147**
 [1]: https://larikov.nomoredomains.rocks
