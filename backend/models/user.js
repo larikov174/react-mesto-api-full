@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const isEmail = require('validator/lib/isEmail');
-const validator = require('validator');
+const regExp = require('../utils/const');
 const CustomError = require('../utils/CustomError');
 
 const userSchema = new mongoose.Schema(
@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       validate: {
         validator(v) {
-          return validator.isURL(v);
+          return regExp.test(v);
         },
       },
       default:
